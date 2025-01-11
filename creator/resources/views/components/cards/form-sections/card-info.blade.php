@@ -1,5 +1,3 @@
-@props(['cardData'])
-
 <div class="pokemon-card-form__section" x-show="currentStep === 4">
     <h3 class="pokemon-card-form__section-title">Card Information</h3>
     <div class="pokemon-card-form__grid-2">

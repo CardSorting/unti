@@ -1,5 +1,3 @@
-@props(['formData'])
-
 <div class="pokemon-card-preview">
     <h3 class="pokemon-card-preview__title">Card Preview</h3>
     <div class="pokemon-card-preview__card"
@@ -8,14 +6,14 @@
          @mouseout="$el.style.transform = 'scale(1)'">
         <div class="absolute inset-0 p-4">
             <div class="flex justify-between items-start bg-gradient-to-r from-transparent via-yellow-100 to-transparent py-1 -mx-4 px-4">
-                <div class="font-bold text-lg" x-text="formData.cardData.name || 'Pokemon Name'"></div>
-                <div class="font-bold text-red-600" x-text="'HP ' + (formData.cardData.hp || '??')"></div>
+                <div class="font-bold text-lg" x-text="cardData.name || 'Pokemon Name'"></div>
+                <div class="font-bold text-red-600" x-text="'HP ' + (cardData.hp || '??')"></div>
             </div>
-            <div class="mt-2 text-sm font-semibold" x-text="formData.cardData.type || 'Type'"></div>
-            <div class="mt-4 text-xs leading-relaxed" x-text="formData.cardData.description || 'Description will appear here...'"></div>
+            <div class="mt-2 text-sm font-semibold" x-text="cardData.type || 'Type'"></div>
+            <div class="mt-4 text-xs leading-relaxed" x-text="cardData.description || 'Description will appear here...'"></div>
             
             <div class="mt-4 space-y-2 bg-gradient-to-r from-transparent via-yellow-100 to-transparent py-2 -mx-4 px-4">
-                <template x-for="attack in formData.attacks" :key="attack.name">
+                <template x-for="attack in attacks" :key="attack.name">
                     <div class="text-sm flex justify-between items-center">
                         <span class="font-medium" x-text="attack.name || ''"></span>
                         <div class="flex items-center">
@@ -27,8 +25,8 @@
             </div>
             
             <div class="absolute bottom-4 left-4 right-4 text-xs text-gray-600">
-                <div x-text="'Artist: ' + (formData.cardData.artist || '???')"></div>
-                <div x-text="formData.cardData.set ? formData.cardData.set + ' ©' + formData.cardData.year : 'Set information'"></div>
+                <div x-text="'Artist: ' + (cardData.artist || '???')"></div>
+                <div x-text="cardData.set ? cardData.set + ' ©' + cardData.year : 'Set information'"></div>
             </div>
         </div>
     </div>
