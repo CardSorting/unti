@@ -1,19 +1,9 @@
 import './bootstrap';
 import Alpine from 'alpinejs';
 
-// Wait for CSRF token to be available before initializing
-const waitForCSRF = () => {
-    const token = document.head.querySelector('meta[name="csrf-token"]');
-    if (token) {
-        window.Alpine = Alpine;
-        Alpine.start();
-    } else {
-        setTimeout(waitForCSRF, 100);
-    }
-};
-
-// Start initialization
-document.addEventListener('DOMContentLoaded', waitForCSRF);
+// Initialize Alpine.js
+window.Alpine = Alpine;
+Alpine.start();
 
 // Initialize Alpine.js components
 document.addEventListener('alpine:init', () => {
@@ -63,20 +53,6 @@ document.addEventListener('alpine:init', () => {
             this.attacks = [{ name: '', damage: '0', energyCount: 1, description: '' }];
             this.cardData.attacks = this.attacks;
 
-            // Add form submit handler to ensure CSRF token is present
-            const form = document.querySelector('form');
-            if (form) {
-                form.addEventListener('submit', () => {
-                    const token = document.head.querySelector('meta[name="csrf-token"]');
-                    if (token && !form.querySelector('input[name="_token"]')) {
-                        const input = document.createElement('input');
-                        input.type = 'hidden';
-                        input.name = '_token';
-                        input.value = token.content;
-                        form.appendChild(input);
-                    }
-                });
-            }
         },
         addAttack() {
             this.attacks.push({ name: '', damage: '0', energyCount: 1, description: '' });

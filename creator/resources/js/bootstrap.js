@@ -7,28 +7,55 @@
 import axios from 'axios';
 window.axios = axios;
 
-// Initialize axios with CSRF token
-const initAxios = () => {
-    window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
-    window.axios.defaults.withCredentials = true;
+// Set up axios defaults
+window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+window.axios.defaults.withCredentials = true;
 
-    // Wait for DOM to be ready to ensure meta tag is available
-    const setCSRFToken = () => {
+// Function to get CSRF token
+const getCSRFToken = async () => {
+    try {
+        // First try to get from meta tag
         const token = document.head.querySelector('meta[name="csrf-token"]');
         if (token) {
-            window.axios.defaults.headers.common['X-CSRF-TOKEN'] = token.content;
-        } else {
-            // If token not found, try again in 100ms
-            setTimeout(setCSRFToken, 100);
+            return token.content;
         }
-    };
 
-    // Start checking for CSRF token
-    setCSRFToken();
+        // If no meta tag, fetch from endpoint
+        const response = await axios.get('/csrf-token');
+        if (response.data.token) {
+            // Create meta tag if it doesn't exist
+            const meta = document.createElement('meta');
+            meta.name = 'csrf-token';
+            meta.content = response.data.token;
+            document.head.appendChild(meta);
+            return response.data.token;
+        }
+    } catch (error) {
+        console.error('Failed to get CSRF token:', error);
+    }
+    return null;
 };
 
-// Initialize immediately
-initAxios();
+// Initialize CSRF token
+const initCSRF = async () => {
+    const token = await getCSRFToken();
+    if (token) {
+        window.axios.defaults.headers.common['X-CSRF-TOKEN'] = token;
+        // Also set XSRF-TOKEN cookie
+        document.cookie = `XSRF-TOKEN=${encodeURIComponent(token)}; path=/`;
+    }
+};
+
+// Initialize immediately and retry if needed
+(async function initializeWithRetry(retries = 3) {
+    try {
+        await initCSRF();
+    } catch (error) {
+        if (retries > 0) {
+            setTimeout(() => initializeWithRetry(retries - 1), 1000);
+        }
+    }
+})();
 
 /**
  * Echo exposes an expressive API for subscribing to channels and listening
