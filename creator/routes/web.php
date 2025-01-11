@@ -7,6 +7,9 @@ use Illuminate\Http\JsonResponse;
 require __DIR__.'/auth.php';
 
 Route::get('/dashboard', function () {
+    if (App\Models\Card::count() > 0) {
+        return redirect()->route('cards.index');
+    }
     return view('dashboard');
 })->middleware(['auth'])->name('dashboard');
 
