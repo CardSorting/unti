@@ -1,7 +1,19 @@
 import './bootstrap';
 import Alpine from 'alpinejs';
 
-window.Alpine = Alpine;
+// Wait for CSRF token to be available before initializing
+const waitForCSRF = () => {
+    const token = document.head.querySelector('meta[name="csrf-token"]');
+    if (token) {
+        window.Alpine = Alpine;
+        Alpine.start();
+    } else {
+        setTimeout(waitForCSRF, 100);
+    }
+};
+
+// Start initialization
+document.addEventListener('DOMContentLoaded', waitForCSRF);
 
 // Initialize Alpine.js components
 document.addEventListener('alpine:init', () => {
@@ -77,5 +89,3 @@ document.addEventListener('alpine:init', () => {
         }
     }));
 });
-
-Alpine.start();

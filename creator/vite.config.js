@@ -8,4 +8,16 @@ export default defineConfig({
             refresh: true,
         }),
     ],
+    build: {
+        // Generate manifest for better caching
+        manifest: true,
+        // Ensure proper loading order
+        rollupOptions: {
+            output: {
+                manualChunks: {
+                    vendor: ['alpinejs', 'axios'],
+                },
+            },
+        },
+    },
 });
