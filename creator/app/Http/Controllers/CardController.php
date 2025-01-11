@@ -9,15 +9,6 @@ use Illuminate\Support\Facades\Session;
 class CardController extends Controller
 {
     /**
-     * Create a new controller instance.
-     */
-    public function __construct()
-    {
-        $this->middleware('auth');
-        $this->middleware('verified');
-    }
-
-    /**
      * Display a listing of the resource.
      */
     public function index()

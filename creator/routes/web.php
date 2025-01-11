@@ -23,4 +23,6 @@ Route::get('/csrf-token', function() {
     ]);
 });
 
-Route::resource('cards', CardController::class)->only(['index', 'create', 'store', 'show']);
+Route::resource('cards', CardController::class)
+    ->middleware(['auth'])
+    ->only(['index', 'create', 'store', 'show']);
